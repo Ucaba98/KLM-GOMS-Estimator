@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35004.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KlmGomsEstimator.Presentation.CLI", "KlmGomsEstimator.Presentation.CLI\KlmGomsEstimator.Presentation.CLI.csproj", "{626E7B4F-5D74-4D71-AEF7-D306A5F8F17B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KlmGomsEstimator.Domain.Tests", "KlmGomsEstimator.Domain.Tests\KlmGomsEstimator.Domain.Tests.csproj", "{C3859864-AEBB-4485-A35A-FBBFF27885E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KlmGomsEstimator.Domain", "KlmGomsEstimator.Domain\KlmGomsEstimator.Domain.csproj", "{645D67A7-A9A6-4DD2-9370-30152BFE4A30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KlmGomsEstimator.Infrastructure", "KlmGomsEstimator.Infrastructure\KlmGomsEstimator.Infrastructure.csproj", "{9F338F6E-2856-473F-A281-9666EB128241}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KlmGomsEstimator.Infrastructure.Tests", "KlmGomsEstimator.Infrastructure.Tests\KlmGomsEstimator.Infrastructure.Tests.csproj", "{4B01B8EE-6E6F-479E-A77D-DEE285AD5668}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KlmGomsEstimator.Presentation.CLI.Tests", "KlmGomsEstimator.Presentation.CLI.Tests\KlmGomsEstimator.Presentation.CLI.Tests.csproj", "{CA11C21A-C2A2-4C99-B607-BB7F02D08951}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{626E7B4F-5D74-4D71-AEF7-D306A5F8F17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626E7B4F-5D74-4D71-AEF7-D306A5F8F17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626E7B4F-5D74-4D71-AEF7-D306A5F8F17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626E7B4F-5D74-4D71-AEF7-D306A5F8F17B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3859864-AEBB-4485-A35A-FBBFF27885E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3859864-AEBB-4485-A35A-FBBFF27885E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3859864-AEBB-4485-A35A-FBBFF27885E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3859864-AEBB-4485-A35A-FBBFF27885E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645D67A7-A9A6-4DD2-9370-30152BFE4A30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645D67A7-A9A6-4DD2-9370-30152BFE4A30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645D67A7-A9A6-4DD2-9370-30152BFE4A30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645D67A7-A9A6-4DD2-9370-30152BFE4A30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F338F6E-2856-473F-A281-9666EB128241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F338F6E-2856-473F-A281-9666EB128241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F338F6E-2856-473F-A281-9666EB128241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F338F6E-2856-473F-A281-9666EB128241}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B01B8EE-6E6F-479E-A77D-DEE285AD5668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B01B8EE-6E6F-479E-A77D-DEE285AD5668}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B01B8EE-6E6F-479E-A77D-DEE285AD5668}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B01B8EE-6E6F-479E-A77D-DEE285AD5668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA11C21A-C2A2-4C99-B607-BB7F02D08951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA11C21A-C2A2-4C99-B607-BB7F02D08951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA11C21A-C2A2-4C99-B607-BB7F02D08951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA11C21A-C2A2-4C99-B607-BB7F02D08951}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CEA4DB6D-7315-4F85-8015-42976D7D1734}
+	EndGlobalSection
+EndGlobal
