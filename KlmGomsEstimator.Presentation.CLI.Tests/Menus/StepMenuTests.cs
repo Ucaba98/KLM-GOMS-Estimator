@@ -30,7 +30,7 @@ public class StepMenuTests
         _consoleMock.ReadLine().Returns("h");
 
         // Act
-        var result = _stepMenuSut.ReadStep();
+        var result = _stepMenuSut.CreateStep();
 
         // Assert
         result.Description.Should().Be(stepDescription);
@@ -47,7 +47,7 @@ public class StepMenuTests
         _consoleMock.ReadLine().Returns("k");
 
         // Act
-        var result = _stepMenuSut.ReadStep();
+        var result = _stepMenuSut.CreateStep();
 
         // Assert
         result.Description.Should().Be(stepDescription);
@@ -67,7 +67,7 @@ public class StepMenuTests
         _consoleMock.ReadIndex(Arg.Any<string>(), 1, 3).Returns(2);
 
         // Act
-        var result = _stepMenuSut.ReadStep();
+        var result = _stepMenuSut.CreateStep();
 
         // Assert
         result.Description.Should().Be(stepDescription);
@@ -86,7 +86,7 @@ public class StepMenuTests
         _consoleMock.ReadLine().Returns("invalid", "k");
 
         // Act
-        var result = _stepMenuSut.ReadStep();
+        var result = _stepMenuSut.CreateStep();
 
         // Assert
         _consoleMock.Received().WriteLine("Invalid operator. Please try again.");

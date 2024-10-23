@@ -69,13 +69,13 @@ internal class ConsoleApplication
         var formattedModel = _modelBeautifier.BeautifyModel(importedModel, _currentTypingSpeed);
         _console.WriteLine(formattedModel);
 
-        _modelMenu.ModifyMenu(importedModel);
+        _modelMenu.ModifyModel(importedModel);
         _modelExportMenu.ExportModel(importedModel, _currentTypingSpeed);
     }
 
     private void CreateModel()
     {
-        var newModel = _modelMenu.ReadModel();
+        var newModel = _modelMenu.CreateModel();
         var formattedModel = _modelBeautifier.BeautifyModel(newModel, _currentTypingSpeed);
         _console.WriteLine(formattedModel);
 

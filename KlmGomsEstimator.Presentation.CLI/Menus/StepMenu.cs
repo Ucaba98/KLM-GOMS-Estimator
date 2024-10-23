@@ -13,7 +13,7 @@ public class StepMenu : IStepMenu
         _console = console;
     }
 
-    public Step ReadStep()
+    public Step CreateStep()
     {
         var step = _console.ReadNonNullString(
             "Let's add a step. Please write a description:",

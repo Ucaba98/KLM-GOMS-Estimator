@@ -1,4 +1,5 @@
 ﻿using KlmGomsEstimator.Domain.Instructions;
+using KlmGomsEstimator.Presentation.CLI.Menus.Options;
 using KlmGomsEstimator.Presentation.CLI.Terminal;
 
 namespace KlmGomsEstimator.Presentation.CLI.Menus;
@@ -9,21 +10,50 @@ public class InstructionMenu : IInstructionMenu
     private readonly IStepMenu _stepMenu;
     private readonly IModelBeautifier _modelBeautifier;
 
+    private readonly OptionsMenu _modifyMenu;
+
+    private static readonly TerminalOption _seeDetails = new("See Details", 's');
+    private static readonly TerminalOption _addStep = new("Add Step", 'a');
+    private static readonly TerminalOption _removeStep = new("Remove Step", 'r');
+    private static readonly TerminalOption _moveStep = new("Move Step", 'm');
+    private static readonly TerminalOption _changeDescription = new("Change Instruction Description", 'd');
+    private static readonly TerminalOption _quit = TerminalOption.Quit;
+
+    private readonly Dictionary<TerminalOption, Action<Instruction>> _optionActions;
+
     public InstructionMenu(IConsole console, IStepMenu stepReaderMenu, IModelBeautifier modelBeautifier)
     {
         _console = console;
         _stepMenu = stepReaderMenu;
         _modelBeautifier = modelBeautifier;
+
+        _optionActions = new()
+        {
+            { _seeDetails, DisplayInstruction },
+            { _addStep, AddStep },
+            { _removeStep, RemoveStep },
+            { _moveStep, MoveStep },
+            { _changeDescription, ChangeInstructionDescription }
+        };
+
+        _modifyMenu = new("How would you like to modify this instruction?", _console)
+        {
+            _seeDetails,
+            _addStep,
+            _removeStep,
+            _moveStep,
+            _changeDescription,
+            _quit
+        };
     }
 
-    public Instruction ReadInstruction()
+    public Instruction CreateInstruction()
     {
         var description = _console.ReadNonNullString(
             "Let's add an instruction. Please write a description:",
             "Please write a description for the instruction:");
 
         Instruction instruction = new(description);
-
         AddStep(instruction);
         ModifyInstruction(instruction);
 
@@ -32,37 +62,24 @@ public class InstructionMenu : IInstructionMenu
 
     public void ModifyInstruction(Instruction instruction)
     {
-        var arrangingSteps = true;
-        while (arrangingSteps)
+        while (true)
         {
-            _console.WriteLine(_modelBeautifier.BeautifyInstruction(instruction));
-            _console.WriteLine("Add step (a), remove step (r), move step (m), change description (d), or quit (q)?");
+            DisplayInstruction(instruction);
 
-            var stepAction = _console.ReadLine()?.Trim().ToLower();
-            switch (stepAction)
+            var choice = _modifyMenu.ReadOption();
+
+            if (choice.IsQuit)
             {
-                case "a":
-                    AddStep(instruction);
-                    break;
-                case "r":
-                    RemoveStep(instruction);
-                    break;
-                case "m":
-                    MoveStep(instruction);
-                    break;
-                case "d":
-                    ChangeInstructionDescription(instruction);
-                    break;
-                case "q":
-                    arrangingSteps = false;
-                    break;
+                break;
             }
+
+            _optionActions[choice](instruction);
         }
     }
 
     private void AddStep(Instruction instruction)
     {
-        instruction.AddStep(_stepMenu.ReadStep());
+        instruction.AddStep(_stepMenu.CreateStep());
         _console.WriteLine("Step added");
     }
 
@@ -104,4 +121,6 @@ public class InstructionMenu : IInstructionMenu
         instruction.Description = newDescription;
         _console.WriteLine("Description changed.");
     }
+
+    private void DisplayInstruction(Instruction instruction) => _console.WriteLine(_modelBeautifier.BeautifyInstruction(instruction));
 }

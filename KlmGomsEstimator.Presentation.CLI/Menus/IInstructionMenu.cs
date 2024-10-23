@@ -4,6 +4,6 @@ namespace KlmGomsEstimator.Presentation.CLI.Menus;
 
 public interface IInstructionMenu
 {
-    Instruction ReadInstruction();
+    Instruction CreateInstruction();
     void ModifyInstruction(Instruction instruction);
 }

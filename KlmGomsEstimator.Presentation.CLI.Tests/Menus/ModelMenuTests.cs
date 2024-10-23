@@ -10,13 +10,17 @@ public class ModelMenuTests
 {
     private readonly IConsole _consoleMock;
     private readonly IInstructionMenu _instructionMenuMock;
+    private readonly IModelBeautifier _modelBeautifierMock;
+
     private readonly ModelMenu _modelMenuSut;
 
     public ModelMenuTests()
     {
         _consoleMock = Substitute.For<IConsole>();
         _instructionMenuMock = Substitute.For<IInstructionMenu>();
-        _modelMenuSut = new ModelMenu(_consoleMock, _instructionMenuMock);
+        _modelBeautifierMock = Substitute.For<IModelBeautifier>();
+
+        _modelMenuSut = new ModelMenu(_consoleMock, _instructionMenuMock, _modelBeautifierMock);
     }
 
     [Fact]
@@ -27,15 +31,32 @@ public class ModelMenuTests
         var instruction = new Instruction("Test Instruction");
 
         _consoleMock.ReadNonNullString(Arg.Any<string>(), Arg.Any<string>()).Returns(description);
-        _instructionMenuMock.ReadInstruction().Returns(instruction);
+        _instructionMenuMock.CreateInstruction().Returns(instruction);
         _consoleMock.ReadLine().Returns("q");
 
         // Act
-        var result = _modelMenuSut.ReadModel();
+        var result = _modelMenuSut.CreateModel();
 
         // Assert
         result.Description.Should().Be(description);
         result.Instructions.Should().ContainSingle(i => i.Description == "Test Instruction");
+    }
+
+    [Fact]
+    public void ModifyModel_SeeDetails()
+    {
+        // Arrange
+        string beautifiedInstruction = "The Details";
+        var model = new Model("Test Model");
+
+        _consoleMock.ReadLine().Returns("s", "q");
+        _modelBeautifierMock.BeautifyModel(Arg.Any<Model>()).Returns("The Details");
+
+        // Act
+        _modelMenuSut.ModifyModel(model);
+
+        // Assert
+        _consoleMock.Received().WriteLine(beautifiedInstruction);
     }
 
     [Fact]
@@ -46,10 +67,10 @@ public class ModelMenuTests
         var instruction = new Instruction("Test Instruction");
 
         _consoleMock.ReadLine().Returns("a", "q");
-        _instructionMenuMock.ReadInstruction().Returns(instruction);
+        _instructionMenuMock.CreateInstruction().Returns(instruction);
 
         // Act
-        _modelMenuSut.ModifyMenu(model);
+        _modelMenuSut.ModifyModel(model);
 
         // Assert
         model.Instructions.Should().ContainSingle(i => i.Description == "Test Instruction");
@@ -67,7 +88,7 @@ public class ModelMenuTests
         _consoleMock.ReadIndex(Arg.Any<string>(), 1, 1).Returns(0);
 
         // Act
-        _modelMenuSut.ModifyMenu(model);
+        _modelMenuSut.ModifyModel(model);
 
         // Assert
         model.Instructions.Should().BeEmpty();
@@ -87,11 +108,28 @@ public class ModelMenuTests
         _consoleMock.ReadIndex(Arg.Any<string>(), 1, 2).Returns(0, 1);
 
         // Act
-        _modelMenuSut.ModifyMenu(model);
+        _modelMenuSut.ModifyModel(model);
 
         // Assert
         model.Instructions[0].Should().Be(instruction2);
         model.Instructions[1].Should().Be(instruction1);
+    }
+
+    [Fact]
+    public void ModifyModel_ModifyInstruction()
+    {
+        // Arrange
+        var model = new Model("Test Model");
+        var instruction = new Instruction("Test Instruction");
+        model.AddInstruction(instruction);
+
+        _consoleMock.ReadLine().Returns("i", "q");
+
+        // Act
+        _modelMenuSut.ModifyModel(model);
+
+        // Assert
+        _instructionMenuMock.Received().ModifyInstruction(instruction);
     }
 
     [Fact]
@@ -105,7 +143,7 @@ public class ModelMenuTests
         _consoleMock.ReadNonNullString(Arg.Any<string>(), Arg.Any<string>()).Returns(newDescription);
 
         // Act
-        _modelMenuSut.ModifyMenu(model);
+        _modelMenuSut.ModifyModel(model);
 
         // Assert
         model.Description.Should().Be(newDescription);

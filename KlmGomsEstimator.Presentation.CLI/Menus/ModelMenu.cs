@@ -1,4 +1,5 @@
 ﻿using KlmGomsEstimator.Domain.Instructions;
+using KlmGomsEstimator.Presentation.CLI.Menus.Options;
 using KlmGomsEstimator.Presentation.CLI.Terminal;
 
 namespace KlmGomsEstimator.Presentation.CLI.Menus;
@@ -7,14 +8,49 @@ public class ModelMenu : IModelMenu
 {
     private readonly IConsole _console;
     private readonly IInstructionMenu _instructionMenu;
+    private readonly IModelBeautifier _modelBeautifier;
 
-    public ModelMenu(IConsole console, IInstructionMenu instructionMenu)
+    private readonly OptionsMenu _modifyMenu;
+
+    private static readonly TerminalOption _seeDetails = new("See Details", 's');
+    private static readonly TerminalOption _addInstruction = new("Add Instruction", 'a');
+    private static readonly TerminalOption _removeInstruction = new("Remove Instruction", 'r');
+    private static readonly TerminalOption _moveInstruction = new("Move Instruction", 'm');
+    private static readonly TerminalOption _modifyInstruction = new("Modify Instruction", 'i');
+    private static readonly TerminalOption _changeDescription = new("Change Model Description", 'd');
+    private static readonly TerminalOption _quit = TerminalOption.Quit;
+
+    private readonly Dictionary<TerminalOption, Action<Model>> _optionActions;
+
+    public ModelMenu(IConsole console, IInstructionMenu instructionMenu, IModelBeautifier modelBeautifier)
     {
         _console = console;
         _instructionMenu = instructionMenu;
+        _modelBeautifier = modelBeautifier;
+
+        _optionActions = new()
+        {
+            { _seeDetails, DisplayModel },
+            { _addInstruction, AddInstruction },
+            { _removeInstruction, RemoveInstruction },
+            { _moveInstruction, MoveInstruction },
+            { _modifyInstruction, ModifyInstruction },
+            { _changeDescription, ChangeModelDescription }
+        };
+
+        _modifyMenu = new("How would you like to modify this instruction?", _console)
+        {
+            _seeDetails,
+            _addInstruction,
+            _removeInstruction,
+            _moveInstruction,
+            _modifyInstruction,
+            _changeDescription,
+            _quit
+        };
     }
 
-    public Model ReadModel()
+    public Model CreateModel()
     {
         _console.WriteLine("You will now input your KLM-GOMS model.");
         var description = _console.ReadNonNullString(
@@ -24,43 +60,29 @@ public class ModelMenu : IModelMenu
         Model model = new(description);
 
         AddInstruction(model);
-        ModifyMenu(model);
+        ModifyModel(model);
 
         return model;
     }
 
-    public void ModifyMenu(Model model)
+    public void ModifyModel(Model model)
     {
-        var arrangingInstructions = true;
-        while (arrangingInstructions)
+        while (true)
         {
-            _console.WriteLine("Add instruction (a), remove instruction (r), move instruction (m), change description (d), or quit (q)?");
+            var choice = _modifyMenu.ReadOption();
 
-            var action = _console.ReadLine()?.Trim().ToLower();
-            switch (action)
+            if (choice.IsQuit)
             {
-                case "a":
-                    AddInstruction(model);
-                    break;
-                case "r":
-                    RemoveInstruction(model);
-                    break;
-                case "m":
-                    MoveInstruction(model);
-                    break;
-                case "d":
-                    ChangeModelDescription(model);
-                    break;
-                case "q":
-                    arrangingInstructions = false;
-                    break;
+                break;
             }
+
+            _optionActions[choice](model);
         }
     }
 
     private void AddInstruction(Model model)
     {
-        model.AddInstruction(_instructionMenu.ReadInstruction());
+        model.AddInstruction(_instructionMenu.CreateInstruction());
         _console.WriteLine("Instruction added");
     }
 
@@ -93,6 +115,12 @@ public class ModelMenu : IModelMenu
         }
     }
 
+    private void ModifyInstruction(Model model)
+    {
+        var chosenIndex = _console.ReadIndex("Choose instruction to modify:", 1, model.Instructions.Count);
+        _instructionMenu.ModifyInstruction(model.Instructions[chosenIndex]);
+    }
+
     private void ChangeModelDescription(Model model)
     {
         var newDescription = _console.ReadNonNullString(
@@ -102,4 +130,6 @@ public class ModelMenu : IModelMenu
         model.Description = newDescription;
         _console.WriteLine("Description changed.");
     }
+
+    private void DisplayModel(Model model) => _console.WriteLine(_modelBeautifier.BeautifyModel(model));
 }

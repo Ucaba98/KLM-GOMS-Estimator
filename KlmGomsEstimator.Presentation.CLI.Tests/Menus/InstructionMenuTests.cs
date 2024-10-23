@@ -36,10 +36,10 @@ public class InstructionMenuTests
 
         _consoleMock.ReadNonNullString(Arg.Any<string>(), Arg.Any<string>()).Returns(instructionDescription);
         _consoleMock.ReadLine().Returns("q");
-        _stepMenuMock.ReadStep().Returns(step);
+        _stepMenuMock.CreateStep().Returns(step);
 
         // Act
-        var result = _instructionMenuSut.ReadInstruction();
+        var result = _instructionMenuSut.CreateInstruction();
 
         // Assert
         result.Description.Should().Be(instructionDescription);
@@ -55,14 +55,31 @@ public class InstructionMenuTests
         _consoleMock.ReadNonNullString(Arg.Any<string>(), Arg.Any<string>()).Returns(instructionDescription);
         _consoleMock.ReadLine().Returns("a");
         _stepMenuMock
-            .ReadStep()
+            .CreateStep()
             .Returns(x => { throw new InvalidOperationException("Invalid step description"); });
 
         // Act
-        Action act = () => _instructionMenuSut.ReadInstruction();
+        Action act = () => _instructionMenuSut.CreateInstruction();
 
         // Assert
         act.Should().Throw<InvalidOperationException>().WithMessage("Invalid step description");
+    }
+
+    [Fact]
+    public void ModifyInstruction_SeeDetails()
+    {
+        // Arrange
+        string beautifiedInstruction = "The Details";
+        var instruction = new Instruction("Test Instruction");
+
+        _consoleMock.ReadLine().Returns("s", "q");
+        _modelBeautifierMock.BeautifyInstruction(Arg.Any<Instruction>()).Returns("The Details");
+
+        // Act
+        _instructionMenuSut.ModifyInstruction(instruction);
+
+        // Assert
+        _consoleMock.Received().WriteLine(beautifiedInstruction);
     }
 
     [Fact]
@@ -73,7 +90,7 @@ public class InstructionMenuTests
         var step = new Step("Test Step", new HomingOperator());
 
         _consoleMock.ReadLine().Returns("a", "q");
-        _stepMenuMock.ReadStep().Returns(step);
+        _stepMenuMock.CreateStep().Returns(step);
 
         // Act
         _instructionMenuSut.ModifyInstruction(instruction);
